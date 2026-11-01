@@ -36,6 +36,10 @@ jobs:
           node -e "JSON.parse(require('fs').readFileSync('pwa/manifest.webmanifest','utf8'));console.log('manifest OK')"
 
       - uses: actions/configure-pages@v5
+        with:
+          # Turn Pages on automatically (uses the pages:write permission above),
+          # so the repo does not need the Settings → Pages toggle first.
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
