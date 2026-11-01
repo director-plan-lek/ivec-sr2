@@ -1,6 +1,6 @@
 #requires -Version 7.0
 <#
-  Re-applies the Alux Android patches after `npx tauri android init`.
+  Re-applies the IVEC SR 2 Android patches after `npx tauri android init`.
 
   Tauri generates the files below with "DO NOT MODIFY" and they lack two things a
   real browser needs:
@@ -11,27 +11,31 @@
                            default for targetSdk >= 30, breaking Google sign-in
                            (net::ERR_CONNECTION_ABORTED on accounts.google.com).
 
-  The patched copies live in scripts/android/.
+  MainActivity.kt also needs `handleBackNavigation` plus window insets so the page
+  does not draw under the status bar on Android 15.
+
+  Paths use forward slashes so the script runs on Windows and on Linux CI runners.
 #>
 $ErrorActionPreference = 'Stop'
 
 $root = Split-Path -Parent $PSScriptRoot
-$genDir = 'src-tauri\gen\android\app\src\main\java\com\alux\browser'
+$genDir = 'src-tauri/gen/android/app/src/main/java/com/alux/browser'
 
 $files = @(
-  @{ Name = 'generated\RustWebViewClient.kt'; Template = 'android\RustWebViewClient.kt' },
-  @{ Name = 'generated\RustWebView.kt';       Template = 'android\RustWebView.kt' },
-  @{ Name = 'MainActivity.kt';                Template = 'android\MainActivity.kt' }
+  @{ Name = 'generated/RustWebViewClient.kt'; Template = 'android/RustWebViewClient.kt' },
+  @{ Name = 'generated/RustWebView.kt';       Template = 'android/RustWebView.kt' },
+  @{ Name = 'MainActivity.kt';                Template = 'android/MainActivity.kt' }
 )
 
-if (-not (Test-Path (Join-Path $root $genDir))) {
+$generatedRoot = Join-Path $root $genDir
+if (-not (Test-Path $generatedRoot)) {
   Write-Host "generated android sources not found — run 'npx tauri android init' first" -ForegroundColor Yellow
   exit 1
 }
 
 foreach ($f in $files) {
-  $template = Join-Path $PSScriptRoot $f.Template
-  $target = Join-Path $root (Join-Path $genDir $f.Name)
+  $template = Join-Path (Join-Path $PSScriptRoot 'android') (Split-Path -Leaf $f.Template)
+  $target = Join-Path (Join-Path $root $genDir) $f.Name
 
   if (-not (Test-Path $template)) {
     Write-Host "missing template: $template" -ForegroundColor Red

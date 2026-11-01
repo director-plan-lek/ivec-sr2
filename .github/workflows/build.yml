@@ -144,8 +144,15 @@ jobs:
       - run: rm -f .npmrc
       - run: npm ci
 
+      - name: XcodeGen (project generator used by `tauri ios init`)
+        run: brew install xcodegen
+
       - name: Init iOS project
-        run: npx tauri ios init --ci
+        run: |
+          set -o pipefail
+          npx tauri ios init --ci 2>&1 | tee ios-init.log
+          echo "--- xcodegen version ---"
+          xcodegen --version || true
 
       - name: Allow plain-HTTP LAN pages (optional)
         run: |
