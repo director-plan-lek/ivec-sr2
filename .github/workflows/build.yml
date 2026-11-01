@@ -87,10 +87,15 @@ jobs:
       - run: rm -f .npmrc
       - run: npm ci
       - name: Init Android project
-        run: npx tauri android init
-      - name: Apply Alux/IVEC Android patches
-        run: pwsh -File scripts/patch-android-webview.ps1
-        shell: pwsh
+        run: npx tauri android init --ci
+      - name: Apply IVEC Android patches
+        run: |
+          SRC=src-tauri/gen/android/app/src/main/java/com/alux/browser
+          echo "generated sources:"; find "$SRC" -name "*.kt" | sort || true
+          test -d "$SRC" || { echo "::error::android sources missing at $SRC"; exit 1; }
+          cp -v scripts/android/RustWebViewClient.kt  "$SRC/generated/RustWebViewClient.kt"
+          cp -v scripts/android/RustWebView.kt        "$SRC/generated/RustWebView.kt"
+          cp -v scripts/android/MainActivity.kt       "$SRC/MainActivity.kt"
       - name: Build APK (debug)
         run: npx tauri android build --apk --debug
       - uses: actions/upload-artifact@v4
