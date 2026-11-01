@@ -90,19 +90,20 @@ jobs:
         run: npx tauri android init --ci
       - name: Apply IVEC Android patches
         run: |
+          set +e
           SRC=src-tauri/gen/android/app/src/main/java/com/alux/browser
-          echo "--- generated tree ---"
-          find src-tauri/gen/android/app/src/main -maxdepth 6 -type d | sort | head -40
+          echo "--- generated tree (./src-tauri/gen/android) ---"
+          TREE=$(find src-tauri/gen/android -maxdepth 8 -type d 2>/dev/null | head -30)
+          echo "$TREE"
+          # Annotations are readable from the API without a token, so mirror the
+          # layout there when the expected package folder is missing.
           if [ ! -d "$SRC" ]; then
-            # Annotations are readable from the API, so surface the real layout
-            find src-tauri/gen/android/app/src/main -maxdepth 7 -type d | sort | head -40 | while IFS= read -r line; do
-              echo "::error::missing $SRC ; found: $line"
-            done
+            echo "$TREE" | while IFS= read -r line; do [ -n "$line" ] && echo "::error::tree: $line"; done
             exit 1
           fi
-          cp -v scripts/android/RustWebViewClient.kt  "$SRC/generated/RustWebViewClient.kt"
-          cp -v scripts/android/RustWebView.kt        "$SRC/generated/RustWebView.kt"
-          cp -v scripts/android/MainActivity.kt       "$SRC/MainActivity.kt"
+          cp -v scripts/android/RustWebViewClient.kt  "$SRC/generated/RustWebViewClient.kt" || echo "::error::cp failed: RustWebViewClient.kt"
+          cp -v scripts/android/RustWebView.kt        "$SRC/generated/RustWebView.kt"       || echo "::error::cp failed: RustWebView.kt"
+          cp -v scripts/android/MainActivity.kt       "$SRC/MainActivity.kt"                  || echo "::error::cp failed: MainActivity.kt"
       - name: Build APK (debug)
         run: npx tauri android build --apk --debug
       - uses: actions/upload-artifact@v4
