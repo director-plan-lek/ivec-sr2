@@ -138,6 +138,9 @@ jobs:
       APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
       APPLE_DEVELOPMENT_TEAM: ${{ secrets.APPLE_DEVELOPMENT_TEAM }}
       APPLE_MOBILE_PROVISION: ${{ secrets.APPLE_MOBILE_PROVISION }}
+      # `tauri ios init` refuses to run without a team id, even for an unsigned
+      # build, and the config fallback is not applied at init time.
+      IVEC_IOS_TEAM: ${{ secrets.APPLE_DEVELOPMENT_TEAM || 'ABCDE12345' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -163,6 +166,9 @@ jobs:
       - name: Init iOS project
         run: |
           set +e
+          # The env var overrides the config; init needs a non-empty team id.
+          export APPLE_DEVELOPMENT_TEAM="${APPLE_DEVELOPMENT_TEAM:-$IVEC_IOS_TEAM}"
+          echo "using team: $APPLE_DEVELOPMENT_TEAM"
           npx tauri ios init --ci > ios-init.log 2>&1
           status=$?
           echo "--- init exit=$status ---"
