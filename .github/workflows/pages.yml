@@ -1,0 +1,45 @@
+name: deploy-pwa
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "pwa/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sanity-check the PWA files
+        run: |
+          test -f pwa/index.html
+          test -f pwa/manifest.webmanifest
+          test -f pwa/sw.js
+          node --check pwa/app.js
+          node --check pwa/sw.js
+          node -e "JSON.parse(require('fs').readFileSync('pwa/manifest.webmanifest','utf8'));console.log('manifest OK')"
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: pwa
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

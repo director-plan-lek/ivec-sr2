@@ -1,0 +1,22 @@
+{
+  "name": "IVEC SR 2 — สถาบันการอาชีวศึกษาภาคใต้ 2",
+  "short_name": "IVEC SR 2",
+  "description": "หน้าเริ่มต้นของ IVEC SR 2 สถาบันการอาชีวศึกษาภาคใต้ 2 — ค้นหาและทางลัดไปยังบริการที่ใช้บ่อย",
+  "lang": "th",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b1220",
+  "theme_color": "#0b1220",
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Google Docs", "url": "./index.html?go=https://docs.google.com/document/u/0/" },
+    { "name": "Google Drive", "url": "./index.html?go=https://drive.google.com/" }
+  ]
+}

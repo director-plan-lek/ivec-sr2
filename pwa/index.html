@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>IVEC SR 2</title>
+    <meta name="description" content="IVEC SR 2 — สถาบันการอาชีวศึกษาภาคใต้ 2" />
+    <meta name="theme-color" content="#0b1220" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="IVEC SR 2" />
+    <link rel="icon" href="./icons/icon-192.png" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="brand">
+        <div class="logo" aria-hidden="true">IV</div>
+        <h1>IVEC SR 2<span class="dot"></span></h1>
+        <p class="sub">สถาบันการอาชีวศึกษาภาคใต้ 2</p>
+      </header>
+
+      <form class="search" id="search" role="search">
+        <span class="glyph" aria-hidden="true">⌕</span>
+        <input
+          id="q"
+          name="q"
+          type="search"
+          placeholder="ค้นหาด้วย Google หรือพิมพ์ที่อยู่เว็บ"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          enterkeyhint="go"
+        />
+        <button type="submit">ค้นหา</button>
+      </form>
+
+      <section class="grid" aria-label="ทางลัด">
+        <a class="tile" href="https://docs.google.com/document/u/0/"><span>📄</span>Google Docs</a>
+        <a class="tile" href="https://drive.google.com/"><span>🗂️</span>Google Drive</a>
+        <a class="tile" href="https://mail.google.com/"><span>✉️</span>Gmail</a>
+        <a class="tile" href="https://www.youtube.com/"><span>▶️</span>YouTube</a>
+        <a class="tile" href="https://docs.google.com/spreadsheets/u/0/"><span>📊</span>Google Sheets</a>
+        <a class="tile" href="https://th.wikipedia.org/"><span>🌐</span>Wikipedia</a>
+      </section>
+
+      <section class="apps" id="apps" hidden>
+        <h2>IVEC Apps</h2>
+        <div class="apps-grid" id="apps-grid"></div>
+      </section>
+
+      <footer>
+        <p id="installhint"></p>
+        <p class="fine">IVEC SR 2 · สถาบันการอาชีวศึกษาภาคใต้ 2</p>
+      </footer>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>
