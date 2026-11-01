@@ -91,8 +91,15 @@ jobs:
       - name: Apply IVEC Android patches
         run: |
           SRC=src-tauri/gen/android/app/src/main/java/com/alux/browser
-          echo "generated sources:"; find "$SRC" -name "*.kt" | sort || true
-          test -d "$SRC" || { echo "::error::android sources missing at $SRC"; exit 1; }
+          echo "--- generated tree ---"
+          find src-tauri/gen/android/app/src/main -maxdepth 6 -type d | sort | head -40
+          if [ ! -d "$SRC" ]; then
+            # Annotations are readable from the API, so surface the real layout
+            find src-tauri/gen/android/app/src/main -maxdepth 7 -type d | sort | head -40 | while IFS= read -r line; do
+              echo "::error::missing $SRC ; found: $line"
+            done
+            exit 1
+          fi
           cp -v scripts/android/RustWebViewClient.kt  "$SRC/generated/RustWebViewClient.kt"
           cp -v scripts/android/RustWebView.kt        "$SRC/generated/RustWebView.kt"
           cp -v scripts/android/MainActivity.kt       "$SRC/MainActivity.kt"
@@ -154,9 +161,15 @@ jobs:
 
       - name: Init iOS project
         run: |
-          set -o pipefail
-          npx tauri ios init --ci 2>&1 | tee ios-init.log
-          echo "--- xcodegen version ---"
+          set +e
+          npx tauri ios init --ci > ios-init.log 2>&1
+          status=$?
+          echo "--- init exit=$status ---"
+          tail -n 30 ios-init.log
+          if [ $status -ne 0 ]; then
+            tail -n 30 ios-init.log | while IFS= read -r line; do echo "::error::$line"; done
+            exit $status
+          fi
           xcodegen --version || true
 
       - name: Allow plain-HTTP LAN pages (optional)
