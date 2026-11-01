@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hello Alux</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(700px 380px at 50% -120px, #1c2a4d, #0a0c11 70%);
+        color: #e7ebf3;
+        font-family: "Segoe UI", "Noto Sans Thai", system-ui, sans-serif;
+      }
+      .card {
+        width: min(520px, 92vw);
+        padding: 28px;
+        border-radius: 18px;
+        background: #111723;
+        border: 1px solid #232c3e;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+      }
+      .badge {
+        width: 44px;
+        height: 44px;
+        border-radius: 13px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #7fb0ff, #4f7cff);
+        color: #06101f;
+        font-weight: 800;
+        font-size: 20px;
+        margin-bottom: 16px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 22px;
+        letter-spacing: -0.4px;
+      }
+      p {
+        margin: 0 0 14px;
+        color: #8b95a7;
+        line-height: 1.7;
+        font-size: 13.5px;
+      }
+      button {
+        height: 38px;
+        padding: 0 16px;
+        border-radius: 10px;
+        border: 0;
+        background: #5b8cff;
+        color: #06101f;
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      #count {
+        font-variant-numeric: tabular-nums;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="badge">A</div>
+      <h1>Hello Alux 👋</h1>
+      <p>
+        แอปนี้ทำงานอยู่ในแท็บของ Alux ผ่าน protocol <code>alux://</code>
+        และถูกติดตั้งไว้ในเครื่องคุณแล้ว — เพิ่มไฟล์ในโฟลเดอร์นี้แล้วติดตั้งใหม่ได้เลย
+      </p>
+      <p>กดแล้ว: <strong id="count">0</strong> ครั้ง</p>
+      <button id="tap">กดตรงนี้</button>
+    </div>
+    <script>
+      let count = 0;
+      document.getElementById("tap").addEventListener("click", () => {
+        count += 1;
+        document.getElementById("count").textContent = String(count);
+      });
+    </script>
+  </body>
+</html>

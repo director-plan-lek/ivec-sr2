@@ -1,0 +1,51 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "IVEC SR 2",
+  "version": "0.1.0",
+  "identifier": "com.alux.browser",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://127.0.0.1:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "IVEC SR 2",
+        "width": 1320,
+        "height": 860,
+        "minWidth": 900,
+        "minHeight": 560,
+        "center": true,
+        "resizable": true,
+        "decorations": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "publisher": "Alux",
+    "category": "Productivity",
+    "shortDescription": "Alux — lightweight browser with Alux Apps",
+    "longDescription": "Alux (อาเล็ก) is a lightweight cross-platform browser built with Tauri + TypeScript. It runs on Windows, Linux, Android and iOS, opens Google Docs, and has a built-in slot for installing your own web apps (Alux Apps).",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": ["English", "Thai"]
+      }
+    }
+  }
+}

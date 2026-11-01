@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.npm-cache/
+src-tauri/target/
+src-tauri/gen/
+app-icon.png
+*.log
+
+# local build artifacts / tools (never commit)
+.tools/
+.verify/
+.cargo/
+release/
+*.apk
+*.ipa
+*.exe

@@ -1,0 +1,8 @@
+{
+  "id": "hello-alux",
+  "name": "Hello Alux",
+  "version": "1.0.0",
+  "description": "แอปตัวอย่าง — ใช้ทดสอบช่องติดตั้งแอป",
+  "accent": "#5b8cff",
+  "entry": "index.html"
+}

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="th">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>IVEC SR 2 — Demo App</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; padding: 28px 18px 90px;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: radial-gradient(120% 90% at 50% 0%, #16305e 0%, #0b1220 55%, #070b14 100%);
+    color: #eaf0ff;
+  }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .badge {
+    width: 44px; height: 44px; border-radius: 12px; flex: none;
+    background: linear-gradient(140deg, #2f7dff, #7a5cff);
+    display: grid; place-items: center; font-weight: 700; font-size: 18px;
+  }
+  h1 { font-size: 19px; margin: 0; letter-spacing: .2px; }
+  .sub { color: #9fb0cc; font-size: 13px; margin: 2px 0 0; }
+  .card {
+    margin-top: 18px; padding: 16px; border-radius: 16px;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09);
+  }
+  form { display: flex; gap: 8px; }
+  input[type=text] {
+    flex: 1; min-width: 0; padding: 12px 14px; border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.25);
+    color: inherit; font-size: 15px; outline: none;
+  }
+  input[type=text]:focus { border-color: #2f7dff; }
+  button {
+    padding: 12px 16px; border-radius: 12px; border: 0; cursor: pointer;
+    background: #2f7dff; color: #fff; font-size: 15px; font-weight: 600;
+  }
+  button:active { transform: scale(.98); }
+  ul { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
+  li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px; border-radius: 12px;
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
+  }
+  li.done span.txt { text-decoration: line-through; color: #7f8ea8; }
+  li span.txt { flex: 1; font-size: 15px; }
+  li .del {
+    background: transparent; color: #ff7b72; font-size: 18px; padding: 2px 6px; font-weight: 400;
+  }
+  .empty { color: #8b9ab5; font-size: 14px; margin-top: 14px; }
+  .note { margin-top: 22px; color: #7f8ea8; font-size: 12.5px; line-height: 1.6; }
+  code { background: rgba(255,255,255,.08); padding: 1px 5px; border-radius: 5px; }
+</style>
+<div class="wrap">
+  <header>
+    <div class="badge">IV</div>
+    <div>
+      <h1>IVEC SR 2 — Demo App</h1>
+      <p class="sub">สถาบันการอาชีวศึกษาภาคใต้ 2 · แอปตัวอย่างที่ติดตั้งในเบราว์เซอร์</p>
+    </div>
+  </header>
+
+  <div class="card">
+    <form id="add">
+      <input id="text" type="text" placeholder="พิมพ์งานที่ต้องทำ แล้วกดเพิ่ม" autocomplete="off" />
+      <button type="submit">เพิ่ม</button>
+    </form>
+    <ul id="list"></ul>
+    <p class="empty" id="empty">ยังไม่มีรายการ — เพิ่มรายการแรกได้เลย</p>
+  </div>
+
+  <p class="note">
+    แอปนี้ถูกติดตั้งไว้ในเครื่องคุณ (ไม่ใช่เว็บออนไลน์) ข้อมูลถูกเก็บด้วย
+    <code>localStorage</code> ของเบราว์เซอร์ และเปิดได้แม้ไม่มีอินเทอร์เน็ต —
+    ใช้เป็นตัวอย่างว่า “ช่องติดตั้งแอป” ของ IVEC SR 2 ทำงานได้จริง
+  </p>
+</div>
+<script>
+  const KEY = "ivec-sr2-demo-tasks";
+  const listEl = document.getElementById("list");
+  const emptyEl = document.getElementById("empty");
+  const inputEl = document.getElementById("text");
+
+  const load = () => {
+    try { return JSON.parse(localStorage.getItem(KEY) || "[]"); } catch { return []; }
+  };
+  const save = (items) => localStorage.setItem(KEY, JSON.stringify(items));
+
+  function render() {
+    const items = load();
+    listEl.innerHTML = "";
+    emptyEl.style.display = items.length ? "none" : "block";
+    items.forEach((item, index) => {
+      const li = document.createElement("li");
+      if (item.done) li.className = "done";
+
+      const box = document.createElement("input");
+      box.type = "checkbox";
+      box.checked = !!item.done;
+      box.addEventListener("change", () => {
+        const rows = load();
+        rows[index].done = box.checked;
+        save(rows);
+        render();
+      });
+
+      const txt = document.createElement("span");
+      txt.className = "txt";
+      txt.textContent = item.text;
+
+      const del = document.createElement("button");
+      del.className = "del";
+      del.textContent = "×";
+      del.title = "ลบ";
+      del.addEventListener("click", () => {
+        const rows = load();
+        rows.splice(index, 1);
+        save(rows);
+        render();
+      });
+
+      li.append(box, txt, del);
+      listEl.appendChild(li);
+    });
+  }
+
+  document.getElementById("add").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const value = inputEl.value.trim();
+    if (!value) return;
+    const rows = load();
+    rows.push({ text: value, done: false });
+    save(rows);
+    inputEl.value = "";
+    render();
+  });
+
+  render();
+</script>
+</html>
